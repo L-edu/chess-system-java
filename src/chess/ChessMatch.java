@@ -1,6 +1,5 @@
 package chess;
 
-import java.security.InvalidParameterException;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.stream.Collectors;
@@ -83,7 +82,7 @@ public class ChessMatch {
 
 		if (testCheck(currentPlayer)) {
 			undoMove(source, target, capturedPiece);
-			throw new ChessException("You can't put yourself in check");
+			throw new ChessException("Voce nao pode se colocar em xeque");
 		}
 		ChessPiece movedPiece = (ChessPiece) board.piece(target);
 
@@ -117,10 +116,10 @@ public class ChessMatch {
 
 	public ChessPiece replacePromotedPiece(String type) {
 		if (promoted == null) {
-			throw new IllegalStateException("Não existe nenhuma peça a ser promovida");
+			throw new IllegalStateException("Não existe nenhuma peca a ser promovida");
 		}
 		if (!type.equals("B") && !type.equals("H") && !type.equals("R") && !type.equals("Q")) {
-			throw new InvalidParameterException("Invalid type for promotion");
+			return promoted;
 		}
 		Position pos = promoted.getChessPosition().toPosition();
 		Piece p = board.removePiece(pos);
@@ -228,19 +227,19 @@ public class ChessMatch {
 
 	private void validateSourcePosition(Position position) {
 		if (!board.thereIsAPiece(position)) {
-			throw new ChessException("There is no piece on source position");
+			throw new ChessException("Nao tem nenhuma peca sobre a posicao de origem");
 		}
 		if (currentPlayer != ((ChessPiece) board.piece(position)).getColor()) {
-			throw new ChessException("The chosen piece is not yours");
+			throw new ChessException("A peca escolhida nao e sua.");
 		}
 		if (!board.piece(position).isThereAnyPossibleMove()) {
-			throw new ChessException("There is no possible moves for the chosen piece");
+			throw new ChessException("Nao tem movimentos possiveis para a peca escolhida");
 		}
 	}
 
 	private void validateTargetPosition(Position source, Position target) {
 		if (!board.piece(source).possibleMove(target)) {
-			throw new ChessException("The chosen piece can't move to target position");
+			throw new ChessException("A peca escolhida nao pode se mover para a posicao alvo");
 		}
 	}
 
@@ -261,7 +260,7 @@ public class ChessMatch {
 				return (ChessPiece) p;
 			}
 		}
-		throw new IllegalStateException("There is no " + color + " King on the board");
+		throw new IllegalStateException("Nao ha " + color + " Rei no tabuleiro");
 	}
 
 	private boolean testCheck(Color color) {
